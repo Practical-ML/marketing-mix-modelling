@@ -1,7 +1,6 @@
 ###################################################
 #CLEANING AND PREPARING MESSY MARKETING DATA 
 #BEFORE PERFORMING MARKETING MIX MODELLING
-#USING KAGGLE DATASET
 
 #VIEW THE POST ON MEDIUM: 
 #https://practicalmachinelearning.medium.com/cleaning-and-preparing-marketing-data-in-r-prior-to-machine-learning-or-analysis-ec1a12079f1
@@ -88,7 +87,8 @@ class(marketing_df_clean$date)
 # check all column formats
 str(marketing_df_clean)
 
-#spend column is string for some reason. There are commas in there which should be turned into decimals.
+#spend column is string for some reason. 
+#There are commas in there which should be turned into decimals.
 marketing_df_clean$spend <- as.numeric(gsub("," , ".", marketing_df_clean$spend))
 
 #change all other integer column to numeric for consistency
@@ -100,7 +100,9 @@ str(marketing_df_clean)
 #check again. 
 View(marketing_df_clean)
 
-#looks like lots of duplicates. Some of these rows have been segmented by the columns we've dropped previously (e.g. segment channel by mobile and desktop). so we just need to remember to sum spend by date and group by channel
+#looks like lots of duplicates. 
+#Some of these rows have been segmented by the columns we've dropped previously (e.g. segment channel by mobile and desktop). 
+#so we just need to remember to sum spend by date and group by channel
 
 marketing_df_clean <- aggregate(spend ~ date + channel, data = marketing_df_clean, sum)
 
@@ -160,7 +162,9 @@ str(orders_df_clean)
 #check the data
 View(orders_df_clean)
 
-#looks like lots of duplicates. Some of these rows have been segmented by the columns we've dropped previously (e.g. segment channel by mobile and desktop). so we just need to remember to sum revenue by date and group by channel
+#looks like lots of duplicates. 
+#Some of these rows have been segmented by the columns we've dropped previously (e.g. segment channel by mobile and desktop). 
+#so we just need to remember to sum revenue by date and group by channel
 orders_df_clean <- aggregate(revenue ~ date + channel, data = orders_df_clean, sum)
 
 #check the data
