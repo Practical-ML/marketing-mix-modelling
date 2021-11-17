@@ -1,5 +1,5 @@
 # marketing-mix-modelling
-Discussing and experimenting with marketing mix modelling (MMM) - with code examples
+Discussing process and experimenting with marketing mix modelling (MMM) - with code examples
 
 <h2>Read the Medium posts</h2>
 
