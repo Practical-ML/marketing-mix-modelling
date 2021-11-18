@@ -271,7 +271,7 @@ View(weekly_reshaped_channel)
 #view the data and check for NA or missing values
 print(weekly_reshaped_channel)
 
-#if there are any - replace any NA with 0
+#if found, replace any NA with 0
 weekly_reshaped_channel[is.na(weekly_reshaped_channel)] <- 0
 
 str(weekly_reshaped_channel)
