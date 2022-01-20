@@ -124,9 +124,8 @@ car::ncvTest(mmm_1)
 library(forecast)
 
 #frequency is 52 to denote weekly as there are about 52 weeks in a year. 
-#Our data has observations from 200 weeks
-#and ts() needs a minimum of 2 periods (52 x 2 = 104 weeks), 
-#so our data should be sufficient
+#ts() needs a minimum of 2 periods (52 x 2 = 104 weeks), 
+#our data has observations from 200 weeks so this should be sufficient
 ts_sales <- ts(sampledf$sales, start = 1, frequency = 52)
 
 #check class. should state "ts"
