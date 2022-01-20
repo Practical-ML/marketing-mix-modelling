@@ -127,16 +127,16 @@ library(forecast)
 #Our data has observations from 200 weeks
 #and ts() needs a minimum of 2 periods (52 x 2 = 104 weeks), 
 #so our data should be sufficient
-ts_rev <- ts(sampledf$sales, start = 1, frequency = 52)
+ts_sales <- ts(sampledf$sales, start = 1, frequency = 52)
 
 #check class. should state "ts"
-class(ts_rev)
+class(ts_sales)
 
 #decompose to get the individual components for trends, seasonality, etc
-ts_rev_comp <- decompose(ts_rev)
+ts_sales_comp <- decompose(ts_sales)
 
 #plot out
-plot(ts_rev_comp)
+plot(ts_sales_comp)
 
 #we use tslm() for our regression. 
 #this is just  a timeseries wrapper for lm() but allows trend and seasons on the fly from the data 
@@ -144,69 +144,66 @@ plot(ts_rev_comp)
 #just specify "trend" and "season" and tslm() will automatically generate values based on the ts() object you have specified.
 
 #fit the model
-mmm_2 <- tslm(ts_rev ~ trend + season + ads_youtube + ads_fb + ads_news)
+mmm_2 <- tslm(ts_sales ~ trend + season + ads_youtube + ads_fb + ads_news)
 summary(mmm_2)
 
+
 #we want to forecast using our model
-#i.e. if we were to spend x1 in youtube, x2 in facebook and 0 in newspaper, 
-#what would the predicted spend be for the next 52 weeks?
-#we first need to create a dataframe containing new figures for next 52 weeks
+#i.e. if we were to spend x1 in youtube, x2 in facebook and 0 in newspaper for the next period what would this look like?
+#we first need to create a dataframe containing new figures
 
-#we get this from the last 52 weeks of newspaper spend
-getnewsspend <- as.data.frame(ads_news)
-getnewsspend <- as.data.frame(getnewsspend[149:200, ])
-names(getnewsspend)[1] <- "getnewsspend"
-
+#we want to get newspaper spend
+news_spend <- as.data.frame(ads_news)
+names(news_spend)[1] <- "ads_news"
 
 #and give 40% to Youtube.
 #this is added to the current youtube spend budget (assuming we are keeping the youtube budget 
-#for the next 52 weeks the same as it has been for the past 52 weeks)
-getyoutubespend <- as.data.frame(ads_youtube)
-getyoutubespend <- as.data.frame(getyoutubespend[149:200, ])
-names(getyoutubespend)[1] <- "ads_youtube"
-getyoutubespend$ads_youtube <- getyoutubespend$ads_youtube + (getnewsspend$getnewsspend*0.4)
-getyoutubespend
+#for the next period is the same as it has been for the previous period)
+yt_spend <- as.data.frame(ads_youtube)
+names(yt_spend)[1] <- "ads_youtube"
+yt_spend$ads_youtube <- yt_spend$ads_youtube + (news_spend$ads_news*0.4)
+yt_spend
 
 
 #and give the remainder 60% of newspaper spend to facebook.
 #this is added to the current fb spend budget (assuming we are keeping the fb budget 
-#for the next 52 weeks the same as it has been for the past 52 weeks)
-getfbspend <- as.data.frame(ads_fb)
-getfbspend <- as.data.frame(getfbspend[149:200, ])
-names(getfbspend)[1] <- "ads_fb"
-getfbspend$ads_fb <- getfbspend$ads_fb + (getnewsspend$getnewsspend*0.6)
-getfbspend
+#for the next period is the same as it has been for the previous period)
+fb_spend <- as.data.frame(ads_fb)
+names(fb_spend)[1] <- "ads_fb"
+fb_spend$ads_fb <- fb_spend$ads_fb + (news_spend$ads_news*0.6)
+fb_spend
 
 
-#leaving nothing for newspapers (we are swtiching it off for the next 52 weeks)
-finalnewsspend <-  as.data.frame(getnewsspend*0)
-names(finalnewsspend)[1] <- "ads_news"
-finalnewsspend
+#leaving nothing for newspapers (we are swtiching it off for the next period)
+final_news_spend <-  as.data.frame(news_spend*0)
+names(final_news_spend)[1] <- "ads_news"
+final_news_spend
 
 #now put these new values all into a dataframe. 
-#We'll use the model to predict sales for the next 52 weeks based on these new budget allocation values
-newbudgets <- cbind(getyoutubespend, getfbspend,finalnewsspend)
-newbudgets
+#We'll use the model to predict sales for the next period based on these new budget allocation values
+new_spends <- cbind(yt_spend, fb_spend,final_news_spend)
+new_spends
+
+
+library(ggfortify)
+par(mfrow=c(1,1)) # reset to 1 chart per page
+set.seed(9999)
 
 #what performance looks like with no change
-library(ggfortify)
-
-set.seed(9999)
-forecast_nochange <- forecast(mmm_2, h=200)
-ggplot2::autoplot(forecast_nochange, ts.colour = 'black', size= 0.7, predict.size = 0.7, predict.colour = 'red', conf.int = TRUE, conf.int.fill = 'red', main = "Forecasted", predict.linetype='dashed') 
-
+forecast_unchanged <- forecast(mmm_2, h=200)
+ggplot2::autoplot(forecast_unchanged, ts.colour = 'black', size= 0.7, predict.size = 0.7, predict.colour = 'red', conf.int = TRUE, conf.int.fill = 'red', main = "Forecasted", predict.linetype='dashed') 
 
 #forecast with budget changes
-get_forecastedsales <- forecast(mmm_2, newdata=newbudgets)
-ggplot2::autoplot(get_forecastedsales, ts.colour = 'black', size= 0.7, predict.size = 0.7, predict.colour = 'blue', conf.int = TRUE, conf.int.fill = 'blue', main = "Forecasted")
+forecast_new_spends <- forecast(mmm_2, newdata=new_spends)
+ggplot2::autoplot(forecast_new_spends, ts.colour = 'black', size= 0.7, predict.size = 0.7, predict.colour = 'blue', conf.int = TRUE, conf.int.fill = 'blue', main = "Forecasted")
 
 
-#overlaying them together, and looking at just the periods in blue by limiting x axis with xlim and using autolayer()
-forecast_nochange <- forecast(mmm_2, h=200)
-ggplot2::autoplot(forecast_nochange, ts.colour = 'black', size= 0.7, predict.size = 0.7, predict.colour = 'red', conf.int = TRUE, conf.int.fill = 'red', main = "Forecasted", xlim=c(1,5.5), predict.linetype='dashed') + forecast::autolayer(get_forecastedsales, col = 'blue')
+#overlaying them together using autolayer()
+forecast_unchanged <- forecast(mmm_2, h=200)
+ggplot2::autoplot(forecast_unchanged, ts.colour = 'black', size= 0.7, predict.size = 0.7, predict.colour = 'red', conf.int = TRUE, conf.int.fill = 'red', main = "Forecasted", predict.linetype='dashed') + forecast::autolayer(forecast_new_spends, col = 'blue')
 
 #Get fitted values
-#Finally, you can access fitted values from the model by quering get_forecastedsales$fitted
+#Finally, you can access fitted values from the model by quering forecast_new_spends$fitted
 
 
 
