@@ -3,7 +3,7 @@
 #BEFORE PERFORMING MARKETING MIX MODELLING
 
 #VIEW THE POST ON MEDIUM: 
-#https://practicalmachinelearning.medium.com/cleaning-and-preparing-marketing-data-in-r-prior-to-machine-learning-or-analysis-ec1a12079f1
+# https://towardsdatascience.com/cleaning-and-preparing-marketing-data-in-r-prior-to-machine-learning-or-analysis-ec1a12079f1
 ###################################################
 
 
