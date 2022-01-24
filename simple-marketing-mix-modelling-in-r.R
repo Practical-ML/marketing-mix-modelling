@@ -2,7 +2,7 @@
 #BUILDING A BASIC MARKETING MIX MODEL USING R
 
 #VIEW THE POST ON MEDIUM: 
-# https://practicalmachinelearning.medium.com/building-a-marketing-mix-model-in-r-3a7004d21239
+# https://towardsdatascience.com/building-a-marketing-mix-model-in-r-3a7004d21239
 ###################################################
 
 
