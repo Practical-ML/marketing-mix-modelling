@@ -11,7 +11,7 @@ Discussing process and experimenting with marketing mix modelling (MMM) - with c
 <ins><h4>Code Examples:</h4></ins>
 👉 <strong>Full R Code</strong>: https://github.com/Practical-ML/marketing-mix-modelling/blob/main/wrangling-messy-data-full-code.R
 <br>
-<br>
+
 -----
 <h3>2. Building a marketing mix model in R</h3>
 <p>We review the difference between marketing mix modelling (MMM) vs multi-touch attribution (MTA) and then we go on to build a simple MMM model in R!</p>
