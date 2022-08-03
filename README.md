@@ -10,7 +10,6 @@ Discussing process and experimenting with marketing mix modelling (MMM) - with c
 <br>
 <ins><h4>Code Examples:</h4></ins>
 <br>
-<br>
 👉 <strong>Full R Code</strong>: https://github.com/Practical-ML/marketing-mix-modelling/blob/main/wrangling-messy-data-full-code.R
 <br>
 
@@ -21,7 +20,6 @@ Discussing process and experimenting with marketing mix modelling (MMM) - with c
 <br>
 <br>
 <ins><h4>Code Examples:</h4></ins>
-<br>
 <br>
 👉 <strong>Full R Code</strong>: https://github.com/Practical-ML/marketing-mix-modelling/blob/main/simple-marketing-mix-modelling-in-r.R
 <br>
